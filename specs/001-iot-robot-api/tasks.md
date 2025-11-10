@@ -52,23 +52,23 @@ Per plan.md structure:
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T017 [P] Create base model interfaces in src/RobotApi/Models/IEntity.cs
-- [ ] T018 [P] Create Operator model in src/RobotApi/Models/Operator.cs (Id, Username, Email, Role enum)
-- [ ] T019 [P] Create Robot model in src/RobotApi/Models/Robot.cs (Id, Name, ModelType, FirmwareVersion, ConnectionStatus enum, LastSeenAt, RegisteredAt, Capabilities)
-- [ ] T020 Configure Serilog in src/RobotApi/Program.cs (console sink, structured logging, request logging)
-- [ ] T021 Implement mock authentication middleware in src/RobotApi/Middleware/MockAuthenticationMiddleware.cs (JWT simulation with hardcoded operators)
-- [ ] T022 Create authentication helpers in src/RobotApi/Extensions/AuthenticationExtensions.cs (claims extraction, operator context)
-- [ ] T023 Create in-memory data store interface in src/RobotApi/Data/IDataStore.cs
-- [ ] T024 Implement OperatorStore in src/RobotApi/Data/OperatorStore.cs (ConcurrentDictionary with 3 seeded operators)
-- [ ] T025 Implement RobotStore in src/RobotApi/Data/RobotStore.cs (ConcurrentDictionary with 5 seeded robots)
-- [ ] T026 Create data seeding service in src/RobotApi/Data/DataSeeder.cs (initialize all stores with test data)
-- [ ] T027 Create ProblemDetails factory in src/RobotApi/Extensions/ProblemDetailsExtensions.cs (RFC 7807 format)
-- [ ] T028 Implement global exception handler middleware in src/RobotApi/Middleware/ExceptionHandlerMiddleware.cs
-- [ ] T029 Create validation extensions in src/RobotApi/Extensions/ValidationExtensions.cs (FluentValidation integration)
-- [ ] T030 Configure CORS policy in src/RobotApi/Program.cs (allow localhost for development)
-- [ ] T031 Setup API versioning in src/RobotApi/Program.cs (/v1 prefix for all endpoints)
-- [ ] T032 Create base integration test fixture in tests/RobotApi.Tests.Integration/Fixtures/ApiFixture.cs (WebApplicationFactory)
-- [ ] T033 Create test authentication helper in tests/RobotApi.Tests.Integration/Helpers/AuthHelper.cs (generate test JWT tokens)
+- [X] T017 [P] Create base model interfaces in src/RobotApi/Models/IEntity.cs
+- [X] T018 [P] Create Operator model in src/RobotApi/Models/Operator.cs (Id, Username, Email, Role enum)
+- [X] T019 [P] Create Robot model in src/RobotApi/Models/Robot.cs (Id, Name, ModelType, FirmwareVersion, ConnectionStatus enum, LastSeenAt, RegisteredAt, Capabilities)
+- [X] T020 Configure Serilog in src/RobotApi/Program.cs (console sink, structured logging, request logging)
+- [X] T021 Implement mock authentication middleware in src/RobotApi/Middleware/MockAuthenticationMiddleware.cs (JWT simulation with hardcoded operators)
+- [X] T022 Create authentication helpers in src/RobotApi/Extensions/AuthenticationExtensions.cs (claims extraction, operator context)
+- [X] T023 Create in-memory data store interface in src/RobotApi/Data/IDataStore.cs
+- [X] T024 Implement OperatorStore in src/RobotApi/Data/OperatorStore.cs (ConcurrentDictionary with 3 seeded operators)
+- [X] T025 Implement RobotStore in src/RobotApi/Data/RobotStore.cs (ConcurrentDictionary with 5 seeded robots)
+- [X] T026 Create data seeding service in src/RobotApi/Data/DataSeeder.cs (initialize all stores with test data)
+- [X] T027 Create ProblemDetails factory in src/RobotApi/Extensions/ProblemDetailsExtensions.cs (RFC 7807 format)
+- [X] T028 Implement global exception handler middleware in src/RobotApi/Middleware/ExceptionHandlerMiddleware.cs
+- [X] T029 Create validation extensions in src/RobotApi/Extensions/ValidationExtensions.cs (FluentValidation integration)
+- [X] T030 Configure CORS policy in src/RobotApi/Program.cs (allow localhost for development)
+- [X] T031 Setup API versioning in src/RobotApi/Program.cs (/v1 prefix for all endpoints)
+- [X] T032 Create base integration test fixture in tests/RobotApi.Tests.Integration/Fixtures/ApiFixture.cs (WebApplicationFactory)
+- [X] T033 Create test authentication helper in tests/RobotApi.Tests.Integration/Helpers/AuthHelper.cs (generate test JWT tokens)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
