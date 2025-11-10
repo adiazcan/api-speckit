@@ -27,22 +27,22 @@ Per plan.md structure:
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure (src/RobotApi/, tests/ with 3 projects)
-- [ ] T002 Initialize .NET 8 solution with `dotnet new sln -n RobotApi`
-- [ ] T003 [P] Create RobotApi project with `dotnet new web -n RobotApi -o src/RobotApi`
-- [ ] T004 [P] Create contract test project with `dotnet new xunit -n RobotApi.Tests.Contract -o tests/RobotApi.Tests.Contract`
-- [ ] T005 [P] Create integration test project with `dotnet new xunit -n RobotApi.Tests.Integration -o tests/RobotApi.Tests.Integration`
-- [ ] T006 [P] Create unit test project with `dotnet new xunit -n RobotApi.Tests.Unit -o tests/RobotApi.Tests.Unit`
-- [ ] T007 Add projects to solution with `dotnet sln add` commands
-- [ ] T008 [P] Add FluentValidation package to src/RobotApi/RobotApi.csproj
-- [ ] T009 [P] Add Serilog packages (Serilog.AspNetCore, Serilog.Sinks.Console) to src/RobotApi/RobotApi.csproj
-- [ ] T010 [P] Add FluentAssertions package to all test projects
-- [ ] T011 [P] Add Microsoft.AspNetCore.Mvc.Testing to tests/RobotApi.Tests.Integration/
-- [ ] T012 Create appsettings.json configuration file in src/RobotApi/
-- [ ] T013 Create appsettings.Development.json for local development in src/RobotApi/
-- [ ] T014 Create .editorconfig with C# formatting rules at repository root
-- [ ] T015 Create .gitignore for .NET projects at repository root
-- [ ] T016 Create README.md with project overview and setup instructions at repository root
+- [X] T001 Create project directory structure (src/RobotApi/, tests/ with 3 projects)
+- [X] T002 Initialize .NET 8 solution with `dotnet new sln -n RobotApi`
+- [X] T003 [P] Create RobotApi project with `dotnet new web -n RobotApi -o src/RobotApi`
+- [X] T004 [P] Create contract test project with `dotnet new xunit -n RobotApi.Tests.Contract -o tests/RobotApi.Tests.Contract`
+- [X] T005 [P] Create integration test project with `dotnet new xunit -n RobotApi.Tests.Integration -o tests/RobotApi.Tests.Integration`
+- [X] T006 [P] Create unit test project with `dotnet new xunit -n RobotApi.Tests.Unit -o tests/RobotApi.Tests.Unit`
+- [X] T007 Add projects to solution with `dotnet sln add` commands
+- [X] T008 [P] Add FluentValidation package to src/RobotApi/RobotApi.csproj
+- [X] T009 [P] Add Serilog packages (Serilog.AspNetCore, Serilog.Sinks.Console) to src/RobotApi/RobotApi.csproj
+- [X] T010 [P] Add FluentAssertions package to all test projects
+- [X] T011 [P] Add Microsoft.AspNetCore.Mvc.Testing to tests/RobotApi.Tests.Integration/
+- [X] T012 Create appsettings.json configuration file in src/RobotApi/
+- [X] T013 Create appsettings.Development.json for local development in src/RobotApi/
+- [X] T014 Create .editorconfig with C# formatting rules at repository root
+- [X] T015 Create .gitignore for .NET projects at repository root
+- [X] T016 Create README.md with project overview and setup instructions at repository root
 
 ---
 
