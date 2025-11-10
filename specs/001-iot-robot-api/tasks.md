@@ -215,32 +215,32 @@ Per plan.md structure:
 
 ### Implementation for User Story 4
 
-- [ ] T114 [P] [US4] Create Event model in src/RobotApi/Models/Event.cs (Id, RobotId, EventType, Severity enum, Timestamp, Message, Data dictionary)
-- [ ] T115 [P] [US4] Create Subscription model in src/RobotApi/Models/Subscription.cs (Id, OperatorId, RobotId nullable, EventTypes array, WebhookUrl, IsActive, FilterCriteria, CreatedAt)
-- [ ] T116 [P] [US4] Create SubscriptionRequest DTO in src/RobotApi/Models/DTOs/SubscriptionRequest.cs (RobotId, EventTypes, WebhookUrl, FilterCriteria)
-- [ ] T117 [P] [US4] Create SubscriptionResponse DTO in src/RobotApi/Models/DTOs/SubscriptionResponse.cs
-- [ ] T118 [P] [US4] Create EventResponse DTO in src/RobotApi/Models/DTOs/EventResponse.cs
-- [ ] T119 [P] [US4] Create WebhookPayload DTO in src/RobotApi/Models/DTOs/WebhookPayload.cs (Event, SubscriptionId, DeliveredAt)
-- [ ] T120 [US4] Create SubscriptionRequestValidator in src/RobotApi/Validators/SubscriptionRequestValidator.cs (webhook URL must be HTTPS, event types valid)
-- [ ] T121 [US4] Implement EventStore in src/RobotApi/Data/EventStore.cs (ConcurrentBag with time-based filtering)
-- [ ] T122 [US4] Implement SubscriptionStore in src/RobotApi/Data/SubscriptionStore.cs (ConcurrentDictionary with active subscription queries)
-- [ ] T123 [US4] Create IEventService interface in src/RobotApi/Services/IEventService.cs
-- [ ] T124 [US4] Implement EventService in src/RobotApi/Services/EventService.cs (CreateEventAsync, ListEventsAsync, event generation from command/telemetry changes)
-- [ ] T125 [US4] Create ISubscriptionService interface in src/RobotApi/Services/ISubscriptionService.cs
-- [ ] T126 [US4] Implement SubscriptionService in src/RobotApi/Services/SubscriptionService.cs (CRUD operations, filter matching logic)
-- [ ] T127 [US4] Create IWebhookDeliveryService interface in src/RobotApi/Services/IWebhookDeliveryService.cs
-- [ ] T128 [US4] Implement WebhookDeliveryService in src/RobotApi/Services/WebhookDeliveryService.cs (HttpClient-based delivery with exponential backoff retry, max 3 attempts)
-- [ ] T129 [US4] Create background webhook processor in src/RobotApi/Services/WebhookProcessorService.cs (IHostedService that monitors EventStore and delivers to matching subscriptions)
-- [ ] T130 [US4] Integrate event generation in CommandService in src/RobotApi/Services/CommandService.cs (emit command_completed, command_failed events)
-- [ ] T131 [US4] Integrate event generation in TelemetryService in src/RobotApi/Services/TelemetryService.cs (emit battery_low, sensor_threshold events)
-- [ ] T132 [US4] Implement POST /v1/subscriptions endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (create subscription)
-- [ ] T133 [US4] Implement GET /v1/subscriptions endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (list operator's subscriptions)
-- [ ] T134 [US4] Implement GET /v1/subscriptions/{id} endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (retrieve subscription details)
-- [ ] T135 [US4] Implement PUT /v1/subscriptions/{id} endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (update subscription filters or webhook URL)
-- [ ] T136 [US4] Implement DELETE /v1/subscriptions/{id} endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (deactivate subscription)
-- [ ] T137 [US4] Implement GET /v1/events endpoint in src/RobotApi/Endpoints/EventEndpoints.cs (list events with filtering by robot, type, severity, time range)
-- [ ] T138 [US4] Add webhook delivery logging in src/RobotApi/Services/WebhookDeliveryService.cs (delivery attempts, successes, failures)
-- [ ] T139 [US4] Add authorization checks in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (Operator role or higher)
+- [X] T114 [P] [US4] Create Event model in src/RobotApi/Models/Event.cs (Id, RobotId, EventType, Severity enum, Timestamp, Message, Data dictionary)
+- [X] T115 [P] [US4] Create Subscription model in src/RobotApi/Models/Subscription.cs (Id, OperatorId, RobotId nullable, EventTypes array, WebhookUrl, IsActive, FilterCriteria, CreatedAt)
+- [X] T116 [P] [US4] Create SubscriptionRequest DTO in src/RobotApi/Models/DTOs/SubscriptionRequest.cs (RobotId, EventTypes, WebhookUrl, FilterCriteria)
+- [X] T117 [P] [US4] Create SubscriptionResponse DTO in src/RobotApi/Models/DTOs/SubscriptionResponse.cs
+- [X] T118 [P] [US4] Create EventResponse DTO in src/RobotApi/Models/DTOs/EventResponse.cs
+- [X] T119 [P] [US4] Create WebhookPayload DTO in src/RobotApi/Models/DTOs/WebhookPayload.cs (Event, SubscriptionId, DeliveredAt)
+- [X] T120 [US4] Create SubscriptionRequestValidator in src/RobotApi/Validators/SubscriptionRequestValidator.cs (webhook URL must be HTTPS, event types valid)
+- [X] T121 [US4] Implement EventStore in src/RobotApi/Data/EventStore.cs (ConcurrentBag with time-based filtering)
+- [X] T122 [US4] Implement SubscriptionStore in src/RobotApi/Data/SubscriptionStore.cs (ConcurrentDictionary with active subscription queries)
+- [X] T123 [US4] Create IEventService interface in src/RobotApi/Services/IEventService.cs
+- [X] T124 [US4] Implement EventService in src/RobotApi/Services/EventService.cs (CreateEventAsync, ListEventsAsync, event generation from command/telemetry changes)
+- [X] T125 [US4] Create ISubscriptionService interface in src/RobotApi/Services/ISubscriptionService.cs
+- [X] T126 [US4] Implement SubscriptionService in src/RobotApi/Services/SubscriptionService.cs (CRUD operations, filter matching logic)
+- [X] T127 [US4] Create IWebhookDeliveryService interface in src/RobotApi/Services/IWebhookDeliveryService.cs
+- [X] T128 [US4] Implement WebhookDeliveryService in src/RobotApi/Services/WebhookDeliveryService.cs (HttpClient-based delivery with exponential backoff retry, max 3 attempts)
+- [X] T129 [US4] Create background webhook processor in src/RobotApi/Services/WebhookProcessorService.cs (IHostedService that monitors EventStore and delivers to matching subscriptions)
+- [X] T130 [US4] Integrate event generation in CommandService in src/RobotApi/Services/CommandService.cs (emit command_completed, command_failed events)
+- [X] T131 [US4] Integrate event generation in TelemetryService in src/RobotApi/Services/TelemetryService.cs (emit battery_low, sensor_threshold events)
+- [X] T132 [US4] Implement POST /v1/subscriptions endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (create subscription)
+- [X] T133 [US4] Implement GET /v1/subscriptions endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (list operator's subscriptions)
+- [X] T134 [US4] Implement GET /v1/subscriptions/{id} endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (retrieve subscription details)
+- [X] T135 [US4] Implement PUT /v1/subscriptions/{id} endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (update subscription filters or webhook URL)
+- [X] T136 [US4] Implement DELETE /v1/subscriptions/{id} endpoint in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (deactivate subscription)
+- [X] T137 [US4] Implement GET /v1/events endpoint in src/RobotApi/Endpoints/EventEndpoints.cs (list events with filtering by robot, type, severity, time range)
+- [X] T138 [US4] Add webhook delivery logging in src/RobotApi/Services/WebhookDeliveryService.cs (delivery attempts, successes, failures)
+- [X] T139 [US4] Add authorization checks in src/RobotApi/Endpoints/SubscriptionEndpoints.cs (Operator role or higher)
 
 **Checkpoint**: All user stories (US1, US2, US3, US4) should now be independently functional
 

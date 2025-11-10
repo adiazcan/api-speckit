@@ -12,15 +12,18 @@ public sealed class CommandService : ICommandService
 {
     private readonly CommandStore _commandStore;
     private readonly RobotStore _robotStore;
+    private readonly IEventService _eventService;
     private readonly ILogger<CommandService> _logger;
 
     public CommandService(
         CommandStore commandStore,
         RobotStore robotStore,
+        IEventService eventService,
         ILogger<CommandService> logger)
     {
         _commandStore = commandStore;
         _robotStore = robotStore;
+        _eventService = eventService;
         _logger = logger;
     }
 

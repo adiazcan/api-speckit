@@ -51,6 +51,7 @@ public sealed class TelemetryGeneratorService : BackgroundService
         using var scope = _serviceProvider.CreateScope();
         var robotStore = scope.ServiceProvider.GetRequiredService<RobotStore>();
         var telemetryStore = scope.ServiceProvider.GetRequiredService<TelemetryStore>();
+        var eventService = scope.ServiceProvider.GetRequiredService<IEventService>();
 
         var robots = await robotStore.GetAllAsync();
         var onlineRobots = robots.Where(r => r.ConnectionStatus == ConnectionStatus.Online).ToList();
@@ -64,6 +65,53 @@ public sealed class TelemetryGeneratorService : BackgroundService
 
             var telemetry = GenerateTelemetrySnapshot(robot);
             await telemetryStore.AddAsync(telemetry);
+
+            // Check for battery_low event
+            if (telemetry.BatteryLevel < 20)
+            {
+                await eventService.CreateEventAsync(
+                    robot.Id,
+                    "battery_low",
+                    EventSeverity.Warning,
+                    $"Robot battery level is low: {telemetry.BatteryLevel}%",
+                    new Dictionary<string, object>
+                    {
+                        { "batteryLevel", telemetry.BatteryLevel },
+                        { "timestamp", telemetry.Timestamp }
+                    });
+            }
+
+            // Check for sensor_threshold event (high temperature)
+            if (telemetry.Temperature > 50)
+            {
+                await eventService.CreateEventAsync(
+                    robot.Id,
+                    "sensor_threshold",
+                    EventSeverity.Error,
+                    $"Robot temperature is critically high: {telemetry.Temperature}°C",
+                    new Dictionary<string, object>
+                    {
+                        { "temperature", telemetry.Temperature },
+                        { "threshold", 50 },
+                        { "sensor", "temperature" },
+                        { "timestamp", telemetry.Timestamp }
+                    });
+            }
+            else if (telemetry.Temperature > 45)
+            {
+                await eventService.CreateEventAsync(
+                    robot.Id,
+                    "sensor_threshold",
+                    EventSeverity.Warning,
+                    $"Robot temperature is high: {telemetry.Temperature}°C",
+                    new Dictionary<string, object>
+                    {
+                        { "temperature", telemetry.Temperature },
+                        { "threshold", 45 },
+                        { "sensor", "temperature" },
+                        { "timestamp", telemetry.Timestamp }
+                    });
+            }
 
             // Update robot's LastSeenAt
             await robotStore.UpdateLastSeenAsync(robot.Id);

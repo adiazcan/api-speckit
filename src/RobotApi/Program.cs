@@ -57,6 +57,8 @@ try
     builder.Services.AddSingleton<RobotStore>();
     builder.Services.AddSingleton<CommandStore>();
     builder.Services.AddSingleton<TelemetryStore>();
+    builder.Services.AddSingleton<EventStore>();
+    builder.Services.AddSingleton<SubscriptionStore>();
     builder.Services.AddSingleton<DataSeeder>();
 
     // Register data store interfaces
@@ -64,15 +66,23 @@ try
     builder.Services.AddSingleton<IDataStore<Robot>>(sp => sp.GetRequiredService<RobotStore>());
     builder.Services.AddSingleton<IDataStore<Command>>(sp => sp.GetRequiredService<CommandStore>());
     builder.Services.AddSingleton<IDataStore<Telemetry>>(sp => sp.GetRequiredService<TelemetryStore>());
+    builder.Services.AddSingleton<IDataStore<Event>>(sp => sp.GetRequiredService<EventStore>());
+    builder.Services.AddSingleton<IDataStore<Subscription>>(sp => sp.GetRequiredService<SubscriptionStore>());
 
     // Register services
     builder.Services.AddSingleton<ICommandService, CommandService>();
     builder.Services.AddSingleton<ITelemetryService, TelemetryService>();
     builder.Services.AddSingleton<ITelemetryExportService, TelemetryExportService>();
+    builder.Services.AddSingleton<IEventService, EventService>();
+    builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
+    
+    // Register HTTP client for webhook delivery
+    builder.Services.AddHttpClient<IWebhookDeliveryService, WebhookDeliveryService>();
 
     // Register background services
     builder.Services.AddHostedService<CommandExecutorService>();
     builder.Services.AddHostedService<TelemetryGeneratorService>();
+    builder.Services.AddHostedService<WebhookProcessorService>();
 
     var app = builder.Build();
 
@@ -106,6 +116,10 @@ try
     // Map API endpoints
     app.MapCommandEndpoints();
     app.MapTelemetryEndpoints();
+    
+    var v1 = app.MapGroup("/v1");
+    v1.MapGroup("/subscriptions").MapSubscriptionEndpoints().WithTags("Subscriptions");
+    v1.MapGroup("/events").MapEventEndpoints().WithTags("Events");
 
     Log.Information("IoT Robot Control & Telemetry API started successfully");
 

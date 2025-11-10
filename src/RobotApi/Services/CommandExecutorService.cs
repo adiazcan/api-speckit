@@ -86,6 +86,7 @@ public sealed class CommandExecutorService : BackgroundService
         using var scope = _serviceProvider.CreateScope();
         var commandStore = scope.ServiceProvider.GetRequiredService<CommandStore>();
         var robotStore = scope.ServiceProvider.GetRequiredService<RobotStore>();
+        var eventService = scope.ServiceProvider.GetRequiredService<IEventService>();
 
         var allCommands = await commandStore.GetAllAsync();
         var executingCommands = allCommands
@@ -115,6 +116,20 @@ public sealed class CommandExecutorService : BackgroundService
                     await commandStore.UpdateAsync(command.Id, command);
                     _logger.LogWarning("Command {CommandId} failed - robot {RobotId} disconnected",
                         command.Id, command.RobotId);
+                    
+                    // Emit command_failed event
+                    await eventService.CreateEventAsync(
+                        command.RobotId,
+                        "command_failed",
+                        EventSeverity.Error,
+                        $"Command '{command.CommandType}' failed: Robot disconnected during execution",
+                        new Dictionary<string, object>
+                        {
+                            { "commandId", command.Id },
+                            { "commandType", command.CommandType },
+                            { "errorMessage", command.ErrorMessage }
+                        });
+                    
                     continue;
                 }
 
@@ -135,6 +150,19 @@ public sealed class CommandExecutorService : BackgroundService
 
                     _logger.LogInformation("Command {CommandId} completed successfully on robot {RobotId}",
                         command.Id, command.RobotId);
+                    
+                    // Emit command_completed event
+                    await eventService.CreateEventAsync(
+                        command.RobotId,
+                        "command_completed",
+                        EventSeverity.Info,
+                        $"Command '{command.CommandType}' completed successfully",
+                        new Dictionary<string, object>
+                        {
+                            { "commandId", command.Id },
+                            { "commandType", command.CommandType },
+                            { "executionTime", elapsed.TotalSeconds }
+                        });
                 }
                 else
                 {
@@ -144,6 +172,19 @@ public sealed class CommandExecutorService : BackgroundService
 
                     _logger.LogWarning("Command {CommandId} failed on robot {RobotId}",
                         command.Id, command.RobotId);
+                    
+                    // Emit command_failed event
+                    await eventService.CreateEventAsync(
+                        command.RobotId,
+                        "command_failed",
+                        EventSeverity.Error,
+                        $"Command '{command.CommandType}' failed: {command.ErrorMessage}",
+                        new Dictionary<string, object>
+                        {
+                            { "commandId", command.Id },
+                            { "commandType", command.CommandType },
+                            { "errorMessage", command.ErrorMessage }
+                        });
                 }
 
                 await commandStore.UpdateAsync(command.Id, command);
