@@ -68,6 +68,7 @@ try
     // Register services
     builder.Services.AddSingleton<ICommandService, CommandService>();
     builder.Services.AddSingleton<ITelemetryService, TelemetryService>();
+    builder.Services.AddSingleton<ITelemetryExportService, TelemetryExportService>();
 
     // Register background services
     builder.Services.AddHostedService<CommandExecutorService>();

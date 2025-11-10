@@ -176,16 +176,16 @@ Per plan.md structure:
 
 ### Implementation for User Story 3
 
-- [ ] T091 [P] [US3] Create TelemetryHistoryRequest DTO in src/RobotApi/Models/DTOs/TelemetryHistoryRequest.cs (StartTime, EndTime, TelemetryTypes array, Page, PageSize)
-- [ ] T092 [P] [US3] Create TelemetryHistoryResponse DTO in src/RobotApi/Models/DTOs/TelemetryHistoryResponse.cs (Data array, TotalCount, Page, PageSize)
-- [ ] T093 [US3] Create TelemetryHistoryRequestValidator in src/RobotApi/Validators/TelemetryHistoryRequestValidator.cs (time range validation, 90-day limit, pagination rules)
-- [ ] T094 [US3] Extend TelemetryService with GetHistoricalTelemetryAsync in src/RobotApi/Services/TelemetryService.cs (time range filtering, pagination, field projection)
-- [ ] T095 [US3] Create ITelemetryExportService interface in src/RobotApi/Services/ITelemetryExportService.cs
-- [ ] T096 [US3] Implement TelemetryExportService in src/RobotApi/Services/TelemetryExportService.cs (ExportToCsvAsync method with CSV generation)
-- [ ] T097 [US3] Implement GET /v1/robots/{robotId}/telemetry/history endpoint in src/RobotApi/Endpoints/TelemetryEndpoints.cs (query parameters, return paginated response)
-- [ ] T098 [US3] Implement GET /v1/robots/{robotId}/telemetry/export endpoint in src/RobotApi/Endpoints/TelemetryEndpoints.cs (format parameter, return CSV file with content disposition header)
-- [ ] T099 [US3] Add historical query logging in src/RobotApi/Services/TelemetryService.cs (query executed, record count, time range)
-- [ ] T100 [US3] Add authorization checks in src/RobotApi/Endpoints/TelemetryEndpoints.cs (Viewer role or higher for historical data)
+- [X] T091 [P] [US3] Create TelemetryHistoryRequest DTO in src/RobotApi/Models/DTOs/TelemetryHistoryRequest.cs (StartTime, EndTime, TelemetryTypes array, Page, PageSize)
+- [X] T092 [P] [US3] Create TelemetryHistoryResponse DTO in src/RobotApi/Models/DTOs/TelemetryHistoryResponse.cs (Data array, TotalCount, Page, PageSize)
+- [X] T093 [US3] Create TelemetryHistoryRequestValidator in src/RobotApi/Validators/TelemetryHistoryRequestValidator.cs (time range validation, 90-day limit, pagination rules)
+- [X] T094 [US3] Extend TelemetryService with GetHistoricalTelemetryAsync in src/RobotApi/Services/TelemetryService.cs (time range filtering, pagination, field projection)
+- [X] T095 [US3] Create ITelemetryExportService interface in src/RobotApi/Services/ITelemetryExportService.cs
+- [X] T096 [US3] Implement TelemetryExportService in src/RobotApi/Services/TelemetryExportService.cs (ExportToCsvAsync method with CSV generation)
+- [X] T097 [US3] Implement GET /v1/robots/{robotId}/telemetry/history endpoint in src/RobotApi/Endpoints/TelemetryEndpoints.cs (query parameters, return paginated response)
+- [X] T098 [US3] Implement GET /v1/robots/{robotId}/telemetry/export endpoint in src/RobotApi/Endpoints/TelemetryEndpoints.cs (format parameter, return CSV file with content disposition header)
+- [X] T099 [US3] Add historical query logging in src/RobotApi/Services/TelemetryService.cs (query executed, record count, time range)
+- [X] T100 [US3] Add authorization checks in src/RobotApi/Endpoints/TelemetryEndpoints.cs (Viewer role or higher for historical data)
 
 **Checkpoint**: All primary user stories (US1, US2, US3) should now be independently functional
 
