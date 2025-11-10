@@ -100,23 +100,23 @@ Per plan.md structure:
 
 ### Implementation for User Story 1
 
-- [ ] T047 [P] [US1] Create Command model in src/RobotApi/Models/Command.cs (Id, RobotId, CommandType, Parameters, Priority enum, Status enum, timestamps, OperatorId, Result, ErrorMessage)
-- [ ] T048 [P] [US1] Create CommandRequest DTO in src/RobotApi/Models/DTOs/CommandRequest.cs (CommandType, Parameters, Priority)
-- [ ] T049 [P] [US1] Create CommandResponse DTO in src/RobotApi/Models/DTOs/CommandResponse.cs (map from Command entity)
-- [ ] T050 [US1] Create CommandRequestValidator in src/RobotApi/Validators/CommandRequestValidator.cs (FluentValidation rules for command type, parameters, priority)
-- [ ] T051 [US1] Create MoveCommandParametersValidator in src/RobotApi/Validators/MoveCommandParametersValidator.cs (direction, distance 0-100, speed validation)
-- [ ] T052 [US1] Create RotateCommandParametersValidator in src/RobotApi/Validators/RotateCommandParametersValidator.cs (direction, degrees 0-360)
-- [ ] T053 [US1] Create SensorActivateCommandParametersValidator in src/RobotApi/Validators/SensorActivateCommandParametersValidator.cs (sensorName, enabled validation)
-- [ ] T054 [US1] Implement CommandStore in src/RobotApi/Data/CommandStore.cs (ConcurrentDictionary with CRUD operations, status filtering)
-- [ ] T055 [US1] Create ICommandService interface in src/RobotApi/Services/ICommandService.cs
-- [ ] T056 [US1] Implement CommandService in src/RobotApi/Services/CommandService.cs (SendCommandAsync, GetCommandAsync, ListCommandsAsync, CancelCommandAsync with business logic)
-- [ ] T057 [US1] Create background command executor in src/RobotApi/Services/CommandExecutorService.cs (IHostedService that simulates command execution with state transitions)
-- [ ] T058 [US1] Implement POST /v1/robots/{robotId}/commands endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (validate robot online, create command, return 202)
-- [ ] T059 [US1] Implement GET /v1/robots/{robotId}/commands/{commandId} endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (retrieve command with status)
-- [ ] T060 [US1] Implement GET /v1/robots/{robotId}/commands endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (list with status filter, limit parameter)
-- [ ] T061 [US1] Implement DELETE /v1/robots/{robotId}/commands/{commandId} endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (cancel command if Pending or Executing)
-- [ ] T062 [US1] Add command-specific logging in src/RobotApi/Services/CommandService.cs (command sent, status changes, errors)
-- [ ] T063 [US1] Add authorization checks in src/RobotApi/Endpoints/CommandEndpoints.cs (Operator role or higher for commands)
+- [X] T047 [P] [US1] Create Command model in src/RobotApi/Models/Command.cs (Id, RobotId, CommandType, Parameters, Priority enum, Status enum, timestamps, OperatorId, Result, ErrorMessage)
+- [X] T048 [P] [US1] Create CommandRequest DTO in src/RobotApi/Models/DTOs/CommandRequest.cs (CommandType, Parameters, Priority)
+- [X] T049 [P] [US1] Create CommandResponse DTO in src/RobotApi/Models/DTOs/CommandResponse.cs (map from Command entity)
+- [X] T050 [US1] Create CommandRequestValidator in src/RobotApi/Validators/CommandRequestValidator.cs (FluentValidation rules for command type, parameters, priority)
+- [X] T051 [US1] Create MoveCommandParametersValidator in src/RobotApi/Validators/MoveCommandParametersValidator.cs (direction, distance 0-100, speed validation)
+- [X] T052 [US1] Create RotateCommandParametersValidator in src/RobotApi/Validators/RotateCommandParametersValidator.cs (direction, degrees 0-360)
+- [X] T053 [US1] Create SensorActivateCommandParametersValidator in src/RobotApi/Validators/SensorActivateCommandParametersValidator.cs (sensorName, enabled validation)
+- [X] T054 [US1] Implement CommandStore in src/RobotApi/Data/CommandStore.cs (ConcurrentDictionary with CRUD operations, status filtering)
+- [X] T055 [US1] Create ICommandService interface in src/RobotApi/Services/ICommandService.cs
+- [X] T056 [US1] Implement CommandService in src/RobotApi/Services/CommandService.cs (SendCommandAsync, GetCommandAsync, ListCommandsAsync, CancelCommandAsync with business logic)
+- [X] T057 [US1] Create background command executor in src/RobotApi/Services/CommandExecutorService.cs (IHostedService that simulates command execution with state transitions)
+- [X] T058 [US1] Implement POST /v1/robots/{robotId}/commands endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (validate robot online, create command, return 202)
+- [X] T059 [US1] Implement GET /v1/robots/{robotId}/commands/{commandId} endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (retrieve command with status)
+- [X] T060 [US1] Implement GET /v1/robots/{robotId}/commands endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (list with status filter, limit parameter)
+- [X] T061 [US1] Implement DELETE /v1/robots/{robotId}/commands/{commandId} endpoint in src/RobotApi/Endpoints/CommandEndpoints.cs (cancel command if Pending or Executing)
+- [X] T062 [US1] Add command-specific logging in src/RobotApi/Services/CommandService.cs (command sent, status changes, errors)
+- [X] T063 [US1] Add authorization checks in src/RobotApi/Endpoints/CommandEndpoints.cs (Operator role or higher for commands)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

@@ -1,7 +1,9 @@
 using RobotApi.Data;
+using RobotApi.Endpoints;
 using RobotApi.Extensions;
 using RobotApi.Middleware;
 using RobotApi.Models;
+using RobotApi.Services;
 using Serilog;
 
 // Configure Serilog from appsettings.json
@@ -53,11 +55,19 @@ try
     // Register data stores as singletons (in-memory)
     builder.Services.AddSingleton<OperatorStore>();
     builder.Services.AddSingleton<RobotStore>();
+    builder.Services.AddSingleton<CommandStore>();
     builder.Services.AddSingleton<DataSeeder>();
 
     // Register data store interfaces
     builder.Services.AddSingleton<IDataStore<Operator>>(sp => sp.GetRequiredService<OperatorStore>());
     builder.Services.AddSingleton<IDataStore<Robot>>(sp => sp.GetRequiredService<RobotStore>());
+    builder.Services.AddSingleton<IDataStore<Command>>(sp => sp.GetRequiredService<CommandStore>());
+
+    // Register services
+    builder.Services.AddSingleton<ICommandService, CommandService>();
+
+    // Register background services
+    builder.Services.AddHostedService<CommandExecutorService>();
 
     var app = builder.Build();
 
@@ -87,6 +97,9 @@ try
         version = "1.0.0",
         status = "operational"
     }).WithName("Root").WithTags("Status");
+
+    // Map API endpoints
+    app.MapCommandEndpoints();
 
     Log.Information("IoT Robot Control & Telemetry API started successfully");
 
