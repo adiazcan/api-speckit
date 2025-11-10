@@ -46,8 +46,8 @@ public sealed class CommandExecutorService : BackgroundService
     private async Task ProcessPendingCommandsAsync(CancellationToken stoppingToken)
     {
         using var scope = _serviceProvider.CreateScope();
-        var commandStore = scope.ServiceProvider.GetRequiredService<CommandStore>();
-        var robotStore = scope.ServiceProvider.GetRequiredService<RobotStore>();
+        var commandStore = scope.ServiceProvider.GetRequiredService<ICommandStore>();
+        var robotStore = scope.ServiceProvider.GetRequiredService<IRobotStore>();
 
         var pendingCommands = await commandStore.GetPendingCommandsAsync();
 
@@ -84,8 +84,8 @@ public sealed class CommandExecutorService : BackgroundService
     private async Task ProcessExecutingCommandsAsync(CancellationToken stoppingToken)
     {
         using var scope = _serviceProvider.CreateScope();
-        var commandStore = scope.ServiceProvider.GetRequiredService<CommandStore>();
-        var robotStore = scope.ServiceProvider.GetRequiredService<RobotStore>();
+        var commandStore = scope.ServiceProvider.GetRequiredService<ICommandStore>();
+        var robotStore = scope.ServiceProvider.GetRequiredService<IRobotStore>();
         var eventService = scope.ServiceProvider.GetRequiredService<IEventService>();
 
         var allCommands = await commandStore.GetAllAsync();

@@ -6,7 +6,7 @@ namespace RobotApi.Data;
 /// <summary>
 /// In-memory data store for Command entities using thread-safe ConcurrentDictionary.
 /// </summary>
-public sealed class CommandStore : IDataStore<Command>
+public sealed class CommandStore : ICommandStore
 {
     private readonly ConcurrentDictionary<string, Command> _commands = new();
     private readonly ILogger<CommandStore> _logger;

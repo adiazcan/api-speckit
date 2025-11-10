@@ -84,19 +84,19 @@ Per plan.md structure:
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T034 [P] [US1] Contract test for POST /robots/{robotId}/commands in tests/RobotApi.Tests.Contract/CommandsContractTests.cs (OpenAPI schema validation)
-- [ ] T035 [P] [US1] Contract test for GET /robots/{robotId}/commands/{commandId} in tests/RobotApi.Tests.Contract/CommandsContractTests.cs
-- [ ] T036 [P] [US1] Contract test for GET /robots/{robotId}/commands with filtering in tests/RobotApi.Tests.Contract/CommandsContractTests.cs
-- [ ] T037 [P] [US1] Contract test for DELETE /robots/{robotId}/commands/{commandId} in tests/RobotApi.Tests.Contract/CommandsContractTests.cs
-- [ ] T038 [P] [US1] Integration test for send move command scenario in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
-- [ ] T039 [P] [US1] Integration test for send rotate command scenario in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
-- [ ] T040 [P] [US1] Integration test for send stop command scenario in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
-- [ ] T041 [P] [US1] Integration test for command status tracking in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
-- [ ] T042 [P] [US1] Integration test for command cancellation in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
-- [ ] T043 [P] [US1] Integration test for offline robot rejection in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
-- [ ] T044 [P] [US1] Unit test for CommandService.SendCommandAsync in tests/RobotApi.Tests.Unit/Services/CommandServiceTests.cs
-- [ ] T045 [P] [US1] Unit test for command validation rules in tests/RobotApi.Tests.Unit/Validators/CommandValidatorTests.cs
-- [ ] T046 [P] [US1] Unit test for command state machine transitions in tests/RobotApi.Tests.Unit/Models/CommandTests.cs
+- [X] T034 [P] [US1] Contract test for POST /robots/{robotId}/commands in tests/RobotApi.Tests.Contract/CommandsContractTests.cs (OpenAPI schema validation)
+- [X] T035 [P] [US1] Contract test for GET /robots/{robotId}/commands/{commandId} in tests/RobotApi.Tests.Contract/CommandsContractTests.cs
+- [X] T036 [P] [US1] Contract test for GET /robots/{robotId}/commands with filtering in tests/RobotApi.Tests.Contract/CommandsContractTests.cs
+- [X] T037 [P] [US1] Contract test for DELETE /robots/{robotId}/commands/{commandId} in tests/RobotApi.Tests.Contract/CommandsContractTests.cs
+- [X] T038 [P] [US1] Integration test for send move command scenario in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
+- [X] T039 [P] [US1] Integration test for send rotate command scenario in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
+- [X] T040 [P] [US1] Integration test for send stop command scenario in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
+- [X] T041 [P] [US1] Integration test for command status tracking in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
+- [X] T042 [P] [US1] Integration test for command cancellation in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
+- [X] T043 [P] [US1] Integration test for offline robot rejection in tests/RobotApi.Tests.Integration/CommandScenarioTests.cs
+- [X] T044 [P] [US1] Unit test for CommandService.SendCommandAsync in tests/RobotApi.Tests.Unit/Services/CommandServiceTests.cs
+- [X] T045 [P] [US1] Unit test for command validation rules in tests/RobotApi.Tests.Unit/Validators/CommandValidatorTests.cs
+- [X] T046 [P] [US1] Unit test for command state machine transitions in tests/RobotApi.Tests.Unit/Models/CommandTests.cs
 
 ### Implementation for User Story 1
 

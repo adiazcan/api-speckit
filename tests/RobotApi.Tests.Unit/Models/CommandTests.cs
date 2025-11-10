@@ -5,7 +5,7 @@ using Xunit;
 namespace RobotApi.Tests.Unit.Models;
 
 /// <summary>
-/// Unit tests for Command state machine transitions
+/// Unit tests for Command model and state machine
 /// </summary>
 public class CommandTests
 {
@@ -22,7 +22,7 @@ public class CommandTests
             Priority = CommandPriority.Normal,
             Status = CommandStatus.Pending,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Assert
@@ -33,7 +33,7 @@ public class CommandTests
     }
 
     [Fact]
-    public void Command_TransitionToPending_ToInProgress_IsValid()
+    public void Command_CanTransitionFrom_Pending_To_Executing()
     {
         // Arrange
         var command = new Command
@@ -45,18 +45,18 @@ public class CommandTests
             Priority = CommandPriority.Normal,
             Status = CommandStatus.Pending,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Act
-        command.Status = CommandStatus.InProgress;
+        var canTransition = command.CanTransitionTo(CommandStatus.Executing);
 
         // Assert
-        command.Status.Should().Be(CommandStatus.InProgress);
+        canTransition.Should().BeTrue();
     }
 
     [Fact]
-    public void Command_TransitionToInProgress_ToCompleted_IsValid()
+    public void Command_CanTransitionFrom_Executing_To_Completed()
     {
         // Arrange
         var command = new Command
@@ -66,24 +66,20 @@ public class CommandTests
             CommandType = "move",
             Parameters = new { },
             Priority = CommandPriority.Normal,
-            Status = CommandStatus.InProgress,
+            Status = CommandStatus.Executing,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Act
-        command.Status = CommandStatus.Completed;
-        command.CompletedAt = DateTime.UtcNow;
-        command.Result = "Success";
+        var canTransition = command.CanTransitionTo(CommandStatus.Completed);
 
         // Assert
-        command.Status.Should().Be(CommandStatus.Completed);
-        command.CompletedAt.Should().NotBeNull();
-        command.Result.Should().Be("Success");
+        canTransition.Should().BeTrue();
     }
 
     [Fact]
-    public void Command_TransitionToInProgress_ToFailed_IsValid()
+    public void Command_CanTransitionFrom_Executing_To_Failed()
     {
         // Arrange
         var command = new Command
@@ -93,24 +89,20 @@ public class CommandTests
             CommandType = "move",
             Parameters = new { },
             Priority = CommandPriority.Normal,
-            Status = CommandStatus.InProgress,
+            Status = CommandStatus.Executing,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Act
-        command.Status = CommandStatus.Failed;
-        command.CompletedAt = DateTime.UtcNow;
-        command.ErrorMessage = "Robot connection lost";
+        var canTransition = command.CanTransitionTo(CommandStatus.Failed);
 
         // Assert
-        command.Status.Should().Be(CommandStatus.Failed);
-        command.CompletedAt.Should().NotBeNull();
-        command.ErrorMessage.Should().Be("Robot connection lost");
+        canTransition.Should().BeTrue();
     }
 
     [Fact]
-    public void Command_TransitionToPending_ToCancelled_IsValid()
+    public void Command_CannotTransitionFrom_Completed()
     {
         // Arrange
         var command = new Command
@@ -120,62 +112,62 @@ public class CommandTests
             CommandType = "move",
             Parameters = new { },
             Priority = CommandPriority.Normal,
-            Status = CommandStatus.Pending,
+            Status = CommandStatus.Completed,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
-        // Act
-        command.Status = CommandStatus.Cancelled;
-        command.CompletedAt = DateTime.UtcNow;
-
-        // Assert
-        command.Status.Should().Be(CommandStatus.Cancelled);
-        command.CompletedAt.Should().NotBeNull();
+        // Act & Assert
+        command.CanTransitionTo(CommandStatus.Executing).Should().BeFalse();
+        command.CanTransitionTo(CommandStatus.Pending).Should().BeFalse();
     }
 
     [Fact]
-    public void Command_WithHighPriority_HasCorrectPriorityLevel()
+    public void Command_CannotTransitionFrom_Failed()
     {
         // Arrange
+        var command = new Command
+        {
+            Id = "cmd-001",
+            RobotId = "robot-001",
+            CommandType = "move",
+            Parameters = new { },
+            Priority = CommandPriority.Normal,
+            Status = CommandStatus.Failed,
+            CreatedAt = DateTime.UtcNow,
+            OperatorId = "operator-001"
+        };
+
+        // Act & Assert
+        command.CanTransitionTo(CommandStatus.Pending).Should().BeFalse();
+        command.CanTransitionTo(CommandStatus.Executing).Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(CommandPriority.Normal)]
+    [InlineData(CommandPriority.High)]
+    [InlineData(CommandPriority.Emergency)]
+    public void Command_SupportsAllPriorityLevels(CommandPriority priority)
+    {
+        // Arrange & Act
         var command = new Command
         {
             Id = "cmd-001",
             RobotId = "robot-001",
             CommandType = "stop",
             Parameters = new { },
-            Priority = CommandPriority.High,
+            Priority = priority,
             Status = CommandStatus.Pending,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Assert
-        command.Priority.Should().Be(CommandPriority.High);
+        command.Priority.Should().Be(priority);
     }
 
     [Fact]
-    public void Command_WithLowPriority_HasCorrectPriorityLevel()
-    {
-        // Arrange
-        var command = new Command
-        {
-            Id = "cmd-001",
-            RobotId = "robot-001",
-            CommandType = "sensor_activate",
-            Parameters = new { sensorName = "camera", enabled = true },
-            Priority = CommandPriority.Low,
-            Status = CommandStatus.Pending,
-            CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
-        };
-
-        // Assert
-        command.Priority.Should().Be(CommandPriority.Low);
-    }
-
-    [Fact]
-    public void Command_CompletedState_ShouldHaveCompletedTimestamp()
+    public void Command_CompletedState_HasTimestampAndResult()
     {
         // Arrange
         var createdAt = DateTime.UtcNow.AddMinutes(-5);
@@ -191,17 +183,18 @@ public class CommandTests
             Status = CommandStatus.Completed,
             CreatedAt = createdAt,
             CompletedAt = completedAt,
-            CreatedBy = "operator-001",
+            OperatorId = "operator-001",
             Result = "Success"
         };
 
         // Assert
         command.CompletedAt.Should().NotBeNull();
         command.CompletedAt.Should().BeAfter(command.CreatedAt);
+        command.Result.Should().Be("Success");
     }
 
     [Fact]
-    public void Command_FailedState_ShouldHaveErrorMessage()
+    public void Command_FailedState_HasErrorMessage()
     {
         // Arrange
         var command = new Command
@@ -214,7 +207,7 @@ public class CommandTests
             Status = CommandStatus.Failed,
             CreatedAt = DateTime.UtcNow,
             CompletedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001",
+            OperatorId = "operator-001",
             ErrorMessage = "Obstacle detected"
         };
 
@@ -229,9 +222,9 @@ public class CommandTests
     [InlineData("rotate")]
     [InlineData("stop")]
     [InlineData("sensor_activate")]
-    public void Command_SupportedCommandTypes_AreValid(string commandType)
+    public void Command_SupportsExpectedCommandTypes(string commandType)
     {
-        // Arrange
+        // Arrange & Act
         var command = new Command
         {
             Id = "cmd-001",
@@ -241,7 +234,7 @@ public class CommandTests
             Priority = CommandPriority.Normal,
             Status = CommandStatus.Pending,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Assert
@@ -249,10 +242,11 @@ public class CommandTests
     }
 
     [Fact]
-    public void Command_WithParameters_StoresParametersCorrectly()
+    public void Command_StoresParametersCorrectly()
     {
         // Arrange
         var parameters = new { direction = "forward", distance = 15.5, speed = 3.2 };
+        
         var command = new Command
         {
             Id = "cmd-001",
@@ -262,7 +256,7 @@ public class CommandTests
             Priority = CommandPriority.Normal,
             Status = CommandStatus.Pending,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Assert
@@ -271,10 +265,11 @@ public class CommandTests
     }
 
     [Fact]
-    public void Command_CreatedByOperator_HasOperatorId()
+    public void Command_HasOperatorId()
     {
         // Arrange
         var operatorId = "operator-123";
+        
         var command = new Command
         {
             Id = "cmd-001",
@@ -284,15 +279,15 @@ public class CommandTests
             Priority = CommandPriority.High,
             Status = CommandStatus.Pending,
             CreatedAt = DateTime.UtcNow,
-            CreatedBy = operatorId
+            OperatorId = operatorId
         };
 
         // Assert
-        command.CreatedBy.Should().Be(operatorId);
+        command.OperatorId.Should().Be(operatorId);
     }
 
     [Fact]
-    public void Command_Duration_CanBeCalculated()
+    public void Command_DurationCanBeCalculated()
     {
         // Arrange
         var createdAt = DateTime.UtcNow.AddSeconds(-10);
@@ -308,7 +303,7 @@ public class CommandTests
             Status = CommandStatus.Completed,
             CreatedAt = createdAt,
             CompletedAt = completedAt,
-            CreatedBy = "operator-001"
+            OperatorId = "operator-001"
         };
 
         // Act

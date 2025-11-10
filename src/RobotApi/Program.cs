@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using RobotApi.Data;
 using RobotApi.Endpoints;
 using RobotApi.Extensions;
@@ -26,6 +27,13 @@ try
 
     // Add services
     builder.Services.AddEndpointsApiExplorer();
+
+    // Configure JSON options for enum serialization
+    builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+        options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 
     // Add FluentValidation
     builder.Services.AddFluentValidators();
@@ -68,6 +76,10 @@ try
     builder.Services.AddSingleton<IDataStore<Telemetry>>(sp => sp.GetRequiredService<TelemetryStore>());
     builder.Services.AddSingleton<IDataStore<Event>>(sp => sp.GetRequiredService<EventStore>());
     builder.Services.AddSingleton<IDataStore<Subscription>>(sp => sp.GetRequiredService<SubscriptionStore>());
+    
+    // Register specialized store interfaces
+    builder.Services.AddSingleton<IRobotStore>(sp => sp.GetRequiredService<RobotStore>());
+    builder.Services.AddSingleton<ICommandStore>(sp => sp.GetRequiredService<CommandStore>());
 
     // Register services
     builder.Services.AddSingleton<ICommandService, CommandService>();

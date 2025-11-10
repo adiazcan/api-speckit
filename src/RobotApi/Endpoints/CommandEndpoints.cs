@@ -296,13 +296,13 @@ public static class CommandEndpoints
         {
             var commandType = request.CommandType.ToLowerInvariant();
 
-            // Convert JsonElement to specific parameter type for validation
-            if (request.Parameters is JsonElement jsonElement)
+            // Serialize Parameters to JSON string for validation
+            var parametersJson = JsonSerializer.Serialize(request.Parameters);
+
+            switch (commandType)
             {
-                switch (commandType)
-                {
-                    case "move":
-                        var moveParams = JsonSerializer.Deserialize<MoveCommandParameters>(jsonElement.GetRawText());
+                case "move":
+                    var moveParams = JsonSerializer.Deserialize<MoveCommandParameters>(parametersJson);
                         if (moveParams == null)
                         {
                             return (false, "Move command requires parameters");
@@ -315,8 +315,8 @@ public static class CommandEndpoints
                         }
                         break;
 
-                    case "rotate":
-                        var rotateParams = JsonSerializer.Deserialize<RotateCommandParameters>(jsonElement.GetRawText());
+                case "rotate":
+                    var rotateParams = JsonSerializer.Deserialize<RotateCommandParameters>(parametersJson);
                         if (rotateParams == null)
                         {
                             return (false, "Rotate command requires parameters");
@@ -329,24 +329,23 @@ public static class CommandEndpoints
                         }
                         break;
 
-                    case "sensor_activate":
-                        var sensorParams = JsonSerializer.Deserialize<SensorActivateCommandParameters>(jsonElement.GetRawText());
+                case "sensor_activate":
+                    var sensorParams = JsonSerializer.Deserialize<SensorActivateCommandParameters>(parametersJson);
                         if (sensorParams == null)
                         {
                             return (false, "Sensor activate command requires parameters");
                         }
-                        var sensorValidator = new SensorActivateCommandParametersValidator();
-                        var sensorResult = await sensorValidator.ValidateAsync(sensorParams);
-                        if (!sensorResult.IsValid)
-                        {
-                            return (false, string.Join("; ", sensorResult.Errors.Select(e => e.ErrorMessage)));
-                        }
-                        break;
+                    var sensorValidator = new SensorActivateCommandParametersValidator();
+                    var sensorResult = await sensorValidator.ValidateAsync(sensorParams);
+                    if (!sensorResult.IsValid)
+                    {
+                        return (false, string.Join("; ", sensorResult.Errors.Select(e => e.ErrorMessage)));
+                    }
+                    break;
 
-                    case "stop":
-                        // Stop command has no parameters to validate
-                        break;
-                }
+                case "stop":
+                    // Stop command has no parameters to validate
+                    break;
             }
 
             return (true, string.Empty);

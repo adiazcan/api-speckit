@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using RobotApi.Models;
 using RobotApi.Models.Dtos;
@@ -23,7 +24,8 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
         
         _jsonOptions = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
         };
     }
 
@@ -31,7 +33,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task SendMoveCommand_Scenario_CommandIsCreatedAndExecuted()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var moveCommand = new CommandRequest
         {
             CommandType = "move",
@@ -80,7 +82,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task SendRotateCommand_Scenario_CommandIsProcessed()
     {
         // Arrange
-        var robotId = "robot-002";
+        var robotId = "robot-101";
         var rotateCommand = new CommandRequest
         {
             CommandType = "rotate",
@@ -107,7 +109,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task SendStopCommand_Scenario_HighPriorityCommandIsCreated()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var stopCommand = new CommandRequest
         {
             CommandType = "stop",
@@ -132,7 +134,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task CommandStatusTracking_Scenario_StatusTransitionsAreTracked()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var command = new CommandRequest
         {
             CommandType = "move",
@@ -175,7 +177,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task CommandCancellation_Scenario_PendingCommandCanBeCancelled()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var command = new CommandRequest
         {
             CommandType = "move",
@@ -227,7 +229,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task MultipleCommands_Scenario_CommandsAreQueuedAndExecutedInOrder()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var commandIds = new List<string>();
 
         // Act - Send multiple commands
@@ -263,7 +265,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task InvalidCommandParameters_Scenario_ValidationFailsWithBadRequest()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var invalidCommand = new CommandRequest
         {
             CommandType = "move",
@@ -289,7 +291,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     public async Task SensorActivateCommand_Scenario_SensorCommandIsProcessed()
     {
         // Arrange
-        var robotId = "robot-002";
+        var robotId = "robot-42";
         var sensorCommand = new CommandRequest
         {
             CommandType = "sensor_activate",
@@ -313,7 +315,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
     {
         // Arrange - Use operator token
         var operatorClient = _client; // Already has operator-token
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var command = new CommandRequest
         {
             CommandType = "stop",
@@ -335,7 +337,7 @@ public class CommandScenarioTests : IClassFixture<WebApplicationFactory<Program>
         viewerClient.DefaultRequestHeaders.Remove("Authorization");
         viewerClient.DefaultRequestHeaders.Add("Authorization", "Bearer viewer-token");
         
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var command = new CommandRequest
         {
             CommandType = "stop",

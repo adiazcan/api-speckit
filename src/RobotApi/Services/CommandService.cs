@@ -10,14 +10,14 @@ namespace RobotApi.Services;
 /// </summary>
 public sealed class CommandService : ICommandService
 {
-    private readonly CommandStore _commandStore;
-    private readonly RobotStore _robotStore;
+    private readonly ICommandStore _commandStore;
+    private readonly IRobotStore _robotStore;
     private readonly IEventService _eventService;
     private readonly ILogger<CommandService> _logger;
 
     public CommandService(
-        CommandStore commandStore,
-        RobotStore robotStore,
+        ICommandStore commandStore,
+        IRobotStore robotStore,
         IEventService eventService,
         ILogger<CommandService> logger)
     {

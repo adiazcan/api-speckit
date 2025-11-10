@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using RobotApi.Models;
 using RobotApi.Models.Dtos;
@@ -23,7 +24,8 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
         
         _jsonOptions = new JsonSerializerOptions
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
         };
     }
 
@@ -31,7 +33,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task POST_RobotsCommands_ReturnsAccepted_WithValidCommandResponse()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var request = new CommandRequest
         {
             CommandType = "move",
@@ -58,7 +60,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task GET_RobotsCommandsById_ReturnsOk_WithValidCommandResponse()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var request = new CommandRequest
         {
             CommandType = "stop",
@@ -86,7 +88,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task GET_RobotsCommands_ReturnsOk_WithArrayOfCommands()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         
         // Create a couple of commands
         await _client.PostAsJsonAsync($"/v1/robots/{robotId}/commands", new CommandRequest
@@ -116,7 +118,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task GET_RobotsCommands_WithStatusFilter_ReturnsFilteredCommands()
     {
         // Arrange
-        var robotId = "robot-002";
+        var robotId = "robot-101";
         
         // Create commands
         await _client.PostAsJsonAsync($"/v1/robots/{robotId}/commands", new CommandRequest
@@ -140,7 +142,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task GET_RobotsCommands_WithLimit_ReturnsLimitedResults()
     {
         // Arrange
-        var robotId = "robot-003";
+        var robotId = "robot-247";
         
         // Create multiple commands
         for (int i = 0; i < 5; i++)
@@ -167,7 +169,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task DELETE_RobotsCommands_ReturnsNoContent_ForPendingCommand()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var request = new CommandRequest
         {
             CommandType = "move",
@@ -192,7 +194,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task POST_RobotsCommands_ReturnsBadRequest_WithInvalidCommandType()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var request = new
         {
             CommandType = "invalid_command",
@@ -211,7 +213,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task POST_RobotsCommands_ReturnsBadRequest_WithInvalidParameters()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var request = new CommandRequest
         {
             CommandType = "move",
@@ -229,7 +231,7 @@ public class CommandsContractTests : IClassFixture<WebApplicationFactory<Program
     public async Task GET_RobotsCommandsById_ReturnsNotFound_ForNonExistentCommand()
     {
         // Arrange
-        var robotId = "robot-001";
+        var robotId = "robot-42";
         var nonExistentCommandId = "cmd-nonexistent-99999";
 
         // Act

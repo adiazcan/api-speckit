@@ -6,7 +6,7 @@ namespace RobotApi.Data;
 /// <summary>
 /// In-memory data store for robots with seeded test data.
 /// </summary>
-public class RobotStore : IDataStore<Robot>
+public class RobotStore : IRobotStore
 {
     private readonly ConcurrentDictionary<string, Robot> _robots = new();
     private readonly ILogger<RobotStore> _logger;
