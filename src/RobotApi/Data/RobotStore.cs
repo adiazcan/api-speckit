@@ -32,8 +32,8 @@ public class RobotStore : IDataStore<Robot>
                 RegisteredAt = DateTime.UtcNow.AddDays(-60),
                 Capabilities = new RobotCapabilities
                 {
-                    Commands = new List<string> { "move", "rotate", "stop", "sensor_activate" },
-                    Sensors = new List<string> { "battery", "temperature", "position", "proximity" },
+                    Commands = new string[] { "move", "rotate", "stop", "sensor_activate" },
+                    Sensors = new string[] { "battery", "temperature", "position", "proximity" },
                     MaxSpeed = 5.0,
                     MaxDistance = 100.0
                 }
@@ -49,8 +49,8 @@ public class RobotStore : IDataStore<Robot>
                 RegisteredAt = DateTime.UtcNow.AddDays(-45),
                 Capabilities = new RobotCapabilities
                 {
-                    Commands = new List<string> { "move", "rotate", "stop" },
-                    Sensors = new List<string> { "battery", "temperature", "position" },
+                    Commands = new string[] { "move", "rotate", "stop" },
+                    Sensors = new string[] { "battery", "temperature", "position" },
                     MaxSpeed = 3.0,
                     MaxDistance = 50.0
                 }
@@ -66,8 +66,8 @@ public class RobotStore : IDataStore<Robot>
                 RegisteredAt = DateTime.UtcNow.AddDays(-30),
                 Capabilities = new RobotCapabilities
                 {
-                    Commands = new List<string> { "move", "rotate", "stop", "sensor_activate" },
-                    Sensors = new List<string> { "battery", "temperature", "position", "proximity", "vibration" },
+                    Commands = new string[] { "move", "rotate", "stop", "sensor_activate" },
+                    Sensors = new string[] { "battery", "temperature", "position", "proximity", "vibration" },
                     MaxSpeed = 7.0,
                     MaxDistance = 150.0
                 }
@@ -83,8 +83,8 @@ public class RobotStore : IDataStore<Robot>
                 RegisteredAt = DateTime.UtcNow.AddDays(-15),
                 Capabilities = new RobotCapabilities
                 {
-                    Commands = new List<string> { "move", "rotate", "stop", "sensor_activate" },
-                    Sensors = new List<string> { "battery", "temperature", "position", "proximity", "humidity" },
+                    Commands = new string[] { "move", "rotate", "stop", "sensor_activate" },
+                    Sensors = new string[] { "battery", "temperature", "position", "proximity", "humidity" },
                     MaxSpeed = 10.0,
                     MaxDistance = 200.0
                 }
@@ -100,8 +100,8 @@ public class RobotStore : IDataStore<Robot>
                 RegisteredAt = DateTime.UtcNow.AddDays(-90),
                 Capabilities = new RobotCapabilities
                 {
-                    Commands = new List<string> { "move", "stop" },
-                    Sensors = new List<string> { "battery", "temperature" },
+                    Commands = new string[] { "move", "stop" },
+                    Sensors = new string[] { "battery", "temperature" },
                     MaxSpeed = 2.0,
                     MaxDistance = 25.0
                 }

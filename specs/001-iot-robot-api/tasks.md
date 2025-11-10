@@ -265,17 +265,17 @@ Per plan.md structure:
 
 ### Implementation for Robot Management
 
-- [ ] T148 [P] Create RobotRegistrationRequest DTO in src/RobotApi/Models/DTOs/RobotRegistrationRequest.cs (Name, ModelType, FirmwareVersion, Capabilities)
-- [ ] T149 [P] Create RobotResponse DTO in src/RobotApi/Models/DTOs/RobotResponse.cs (map from Robot entity)
-- [ ] T150 Create RobotRegistrationRequestValidator in src/RobotApi/Validators/RobotRegistrationRequestValidator.cs (name length, firmware semver, capabilities structure)
-- [ ] T151 Create IRobotService interface in src/RobotApi/Services/IRobotService.cs
-- [ ] T152 Implement RobotService in src/RobotApi/Services/RobotService.cs (RegisterRobotAsync, GetRobotAsync, ListRobotsAsync, DeregisterRobotAsync)
-- [ ] T153 Implement GET /v1/robots endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (list all robots)
-- [ ] T154 Implement POST /v1/robots endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (register robot, Administrator only)
-- [ ] T155 Implement GET /v1/robots/{robotId} endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (get robot details)
-- [ ] T156 Implement DELETE /v1/robots/{robotId} endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (deregister robot, Administrator only)
-- [ ] T157 Add robot management logging in src/RobotApi/Services/RobotService.cs (registered, deregistered)
-- [ ] T158 Add authorization checks in src/RobotApi/Endpoints/RobotEndpoints.cs (Administrator for POST/DELETE, Viewer for GET)
+- [X] T148 [P] Create RobotRegistrationRequest DTO in src/RobotApi/Models/DTOs/RobotRegistrationRequest.cs (Name, ModelType, FirmwareVersion, Capabilities)
+- [X] T149 [P] Create RobotResponse DTO in src/RobotApi/Models/DTOs/RobotResponse.cs (map from Robot entity)
+- [X] T150 Create RobotRegistrationRequestValidator in src/RobotApi/Validators/RobotRegistrationRequestValidator.cs (name length, firmware semver, capabilities structure)
+- [X] T151 Create IRobotService interface in src/RobotApi/Services/IRobotService.cs
+- [X] T152 Implement RobotService in src/RobotApi/Services/RobotService.cs (RegisterRobotAsync, GetRobotAsync, ListRobotsAsync, DeregisterRobotAsync)
+- [X] T153 Implement GET /v1/robots endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (list all robots)
+- [X] T154 Implement POST /v1/robots endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (register robot, Administrator only)
+- [X] T155 Implement GET /v1/robots/{robotId} endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (get robot details)
+- [X] T156 Implement DELETE /v1/robots/{robotId} endpoint in src/RobotApi/Endpoints/RobotEndpoints.cs (deregister robot, Administrator only)
+- [X] T157 Add robot management logging in src/RobotApi/Services/RobotService.cs (registered, deregistered)
+- [X] T158 Add authorization checks in src/RobotApi/Endpoints/RobotEndpoints.cs (Administrator for POST/DELETE, Viewer for GET)
 
 ---
 

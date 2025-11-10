@@ -75,6 +75,7 @@ try
     builder.Services.AddSingleton<ITelemetryExportService, TelemetryExportService>();
     builder.Services.AddSingleton<IEventService, EventService>();
     builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
+    builder.Services.AddSingleton<IRobotService, RobotService>();
     
     // Register HTTP client for webhook delivery
     builder.Services.AddHttpClient<IWebhookDeliveryService, WebhookDeliveryService>();
@@ -120,6 +121,7 @@ try
     var v1 = app.MapGroup("/v1");
     v1.MapGroup("/subscriptions").MapSubscriptionEndpoints().WithTags("Subscriptions");
     v1.MapGroup("/events").MapEventEndpoints().WithTags("Events");
+    v1.MapGroup("/robots").MapRobotEndpoints().WithTags("Robots");
 
     Log.Information("IoT Robot Control & Telemetry API started successfully");
 

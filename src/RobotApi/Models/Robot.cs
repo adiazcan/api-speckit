@@ -33,7 +33,7 @@ public class Robot : IEntity
     /// <summary>
     /// UTC timestamp of last communication.
     /// </summary>
-    public DateTime LastSeenAt { get; set; } = DateTime.UtcNow;
+    public DateTime? LastSeenAt { get; set; }
 
     /// <summary>
     /// UTC timestamp when robot was registered.
@@ -70,12 +70,12 @@ public class RobotCapabilities
     /// <summary>
     /// List of supported command types (e.g., "move", "rotate", "stop").
     /// </summary>
-    public required List<string> Commands { get; set; }
+    public required string[] Commands { get; set; }
 
     /// <summary>
     /// List of available sensors (e.g., "battery", "temperature", "position").
     /// </summary>
-    public required List<string> Sensors { get; set; }
+    public required string[] Sensors { get; set; }
 
     /// <summary>
     /// Maximum speed in m/s (optional).
