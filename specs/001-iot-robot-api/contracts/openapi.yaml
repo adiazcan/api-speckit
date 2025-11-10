@@ -1,0 +1,892 @@
+openapi: 3.0.3
+info:
+  title: IoT Robot Control & Telemetry API
+  description: REST API for controlling IoT robots and monitoring telemetry data
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: http://localhost:5000/v1
+    description: Development server
+
+tags:
+  - name: Robots
+    description: Robot management operations
+  - name: Commands
+    description: Robot control commands
+  - name: Telemetry
+    description: Telemetry data access
+  - name: Events
+    description: Event notifications
+  - name: Subscriptions
+    description: Webhook subscription management
+
+security:
+  - BearerAuth: []
+
+paths:
+  /robots:
+    get:
+      tags: [Robots]
+      summary: List all robots
+      description: Retrieve a list of all registered robots with their current status
+      operationId: listRobots
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Robot'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Robots]
+      summary: Register a new robot
+      description: Register a new robot device in the system (Administrator only)
+      operationId: registerRobot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RobotRegistrationRequest'
+      responses:
+        '201':
+          description: Robot registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /robots/{robotId}:
+    parameters:
+      - $ref: '#/components/parameters/RobotId'
+    
+    get:
+      tags: [Robots]
+      summary: Get robot details
+      description: Retrieve detailed information about a specific robot
+      operationId: getRobot
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Robots]
+      summary: Deregister a robot
+      description: Remove a robot from the system (Administrator only)
+      operationId: deregisterRobot
+      responses:
+        '204':
+          description: Robot deregistered successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /robots/{robotId}/commands:
+    parameters:
+      - $ref: '#/components/parameters/RobotId'
+    
+    post:
+      tags: [Commands]
+      summary: Send a command to robot
+      description: Issue a control command to the specified robot
+      operationId: sendCommand
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandRequest'
+      responses:
+        '202':
+          description: Command accepted for execution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          description: Robot offline or unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+    get:
+      tags: [Commands]
+      summary: List robot commands
+      description: Retrieve command history for the specified robot
+      operationId: listCommands
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Pending, Executing, Completed, Failed]
+          description: Filter by command status
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Maximum number of commands to return
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Command'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /robots/{robotId}/commands/{commandId}:
+    parameters:
+      - $ref: '#/components/parameters/RobotId'
+      - $ref: '#/components/parameters/CommandId'
+    
+    get:
+      tags: [Commands]
+      summary: Get command status
+      description: Retrieve detailed status of a specific command
+      operationId: getCommand
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Commands]
+      summary: Cancel command
+      description: Attempt to cancel an in-progress command
+      operationId: cancelCommand
+      responses:
+        '200':
+          description: Command cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        '400':
+          description: Command cannot be cancelled (already completed or failed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /robots/{robotId}/telemetry:
+    parameters:
+      - $ref: '#/components/parameters/RobotId'
+    
+    get:
+      tags: [Telemetry]
+      summary: Get current telemetry
+      description: Retrieve the most recent telemetry snapshot for the robot
+      operationId: getCurrentTelemetry
+      parameters:
+        - name: fields
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+          description: Comma-separated list of fields to include (e.g., battery,temperature)
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telemetry'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /robots/{robotId}/telemetry/history:
+    parameters:
+      - $ref: '#/components/parameters/RobotId'
+    
+    get:
+      tags: [Telemetry]
+      summary: Query historical telemetry
+      description: Retrieve telemetry data for a specified time range with pagination
+      operationId: getHistoricalTelemetry
+      parameters:
+        - name: startTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Start of time range (ISO 8601)
+        - name: endTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: End of time range (ISO 8601)
+        - name: fields
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: false
+          description: Comma-separated list of fields to include
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+          description: Number of records per page
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TelemetryHistoryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /robots/{robotId}/telemetry/export:
+    parameters:
+      - $ref: '#/components/parameters/RobotId'
+    
+    get:
+      tags: [Telemetry]
+      summary: Export telemetry data
+      description: Export historical telemetry in CSV or JSON format
+      operationId: exportTelemetry
+      parameters:
+        - name: startTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [json, csv]
+            default: json
+      responses:
+        '200':
+          description: Export file
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Telemetry'
+            text/csv:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /subscriptions:
+    get:
+      tags: [Subscriptions]
+      summary: List subscriptions
+      description: Retrieve all webhook subscriptions for the authenticated operator
+      operationId: listSubscriptions
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Subscriptions]
+      summary: Create subscription
+      description: Register a new webhook subscription for event notifications
+      operationId: createSubscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRequest'
+      responses:
+        '201':
+          description: Subscription created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /subscriptions/{subscriptionId}:
+    parameters:
+      - $ref: '#/components/parameters/SubscriptionId'
+    
+    get:
+      tags: [Subscriptions]
+      summary: Get subscription details
+      description: Retrieve details of a specific subscription
+      operationId: getSubscription
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Subscriptions]
+      summary: Update subscription
+      description: Modify an existing subscription (e.g., enable/disable, change webhook URL)
+      operationId: updateSubscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionUpdateRequest'
+      responses:
+        '200':
+          description: Subscription updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Subscriptions]
+      summary: Delete subscription
+      description: Remove a webhook subscription
+      operationId: deleteSubscription
+      responses:
+        '204':
+          description: Subscription deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /events:
+    get:
+      tags: [Events]
+      summary: List recent events
+      description: Retrieve recent events across all accessible robots
+      operationId: listEvents
+      parameters:
+        - name: robotId
+          in: query
+          schema:
+            type: string
+          description: Filter by specific robot
+        - name: eventType
+          in: query
+          schema:
+            type: string
+          description: Filter by event type
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [Info, Warning, Error, Critical]
+          description: Minimum severity level
+        - name: since
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Only return events after this time
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Maximum number of events to return
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT bearer token for authentication
+
+  parameters:
+    RobotId:
+      name: robotId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Unique robot identifier
+
+    CommandId:
+      name: commandId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Unique command identifier
+
+    SubscriptionId:
+      name: subscriptionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Unique subscription identifier
+
+  schemas:
+    Robot:
+      type: object
+      required: [id, name, modelType, firmwareVersion, connectionStatus, lastSeenAt, registeredAt, capabilities]
+      properties:
+        id:
+          type: string
+          example: "robot-42"
+        name:
+          type: string
+          example: "Warehouse Robot Alpha"
+        modelType:
+          type: string
+          example: "RoboX-3000"
+        firmwareVersion:
+          type: string
+          example: "2.5.1"
+        connectionStatus:
+          type: string
+          enum: [Online, Offline]
+        lastSeenAt:
+          type: string
+          format: date-time
+        registeredAt:
+          type: string
+          format: date-time
+        capabilities:
+          type: object
+          properties:
+            commands:
+              type: array
+              items:
+                type: string
+            sensors:
+              type: array
+              items:
+                type: string
+            maxSpeed:
+              type: number
+              format: double
+            maxDistance:
+              type: number
+              format: double
+
+    RobotRegistrationRequest:
+      type: object
+      required: [id, name, modelType, firmwareVersion, capabilities]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        modelType:
+          type: string
+        firmwareVersion:
+          type: string
+        capabilities:
+          type: object
+
+    CommandRequest:
+      type: object
+      required: [commandType, parameters]
+      properties:
+        commandType:
+          type: string
+          enum: [move, rotate, stop, sensor_activate]
+        parameters:
+          type: object
+          additionalProperties: true
+        priority:
+          type: string
+          enum: [Normal, High, Emergency]
+          default: Normal
+
+    Command:
+      type: object
+      required: [id, robotId, commandType, parameters, priority, status, createdAt, operatorId]
+      properties:
+        id:
+          type: string
+          format: uuid
+        robotId:
+          type: string
+        commandType:
+          type: string
+        parameters:
+          type: object
+        priority:
+          type: string
+          enum: [Normal, High, Emergency]
+        status:
+          type: string
+          enum: [Pending, Executing, Completed, Failed]
+        createdAt:
+          type: string
+          format: date-time
+        executedAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        operatorId:
+          type: string
+        result:
+          type: object
+          nullable: true
+        errorMessage:
+          type: string
+          nullable: true
+
+    Telemetry:
+      type: object
+      required: [id, robotId, timestamp, position, orientation, speed, batteryLevel, temperature, sensorReadings]
+      properties:
+        id:
+          type: string
+          format: uuid
+        robotId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        position:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/GPSPosition'
+            - $ref: '#/components/schemas/LocalPosition'
+        orientation:
+          type: object
+          properties:
+            pitch:
+              type: number
+            roll:
+              type: number
+            yaw:
+              type: number
+        speed:
+          type: number
+          format: double
+        batteryLevel:
+          type: integer
+          minimum: 0
+          maximum: 100
+        temperature:
+          type: number
+          format: double
+        sensorReadings:
+          type: object
+          additionalProperties: true
+        dataFreshness:
+          type: number
+          description: Seconds since timestamp (computed)
+
+    GPSPosition:
+      type: object
+      required: [type, latitude, longitude]
+      properties:
+        type:
+          type: string
+          enum: [gps]
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        altitude:
+          type: number
+          format: double
+
+    LocalPosition:
+      type: object
+      required: [type, x, y]
+      properties:
+        type:
+          type: string
+          enum: [local]
+        x:
+          type: number
+          format: double
+        y:
+          type: number
+          format: double
+        z:
+          type: number
+          format: double
+
+    TelemetryHistoryResponse:
+      type: object
+      required: [data, pagination]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Telemetry'
+        pagination:
+          type: object
+          properties:
+            page:
+              type: integer
+            pageSize:
+              type: integer
+            totalRecords:
+              type: integer
+            totalPages:
+              type: integer
+
+    Event:
+      type: object
+      required: [id, robotId, eventType, severity, timestamp, message, data]
+      properties:
+        id:
+          type: string
+          format: uuid
+        robotId:
+          type: string
+        eventType:
+          type: string
+          enum: [battery_low, error, command_completed, command_failed, sensor_threshold]
+        severity:
+          type: string
+          enum: [Info, Warning, Error, Critical]
+        timestamp:
+          type: string
+          format: date-time
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+
+    SubscriptionRequest:
+      type: object
+      required: [eventTypes, webhookUrl]
+      properties:
+        robotId:
+          type: string
+          nullable: true
+          description: Specific robot to monitor (null for all robots)
+        eventTypes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+        webhookUrl:
+          type: string
+          format: uri
+          pattern: '^https://'
+        filterCriteria:
+          type: object
+          properties:
+            minSeverity:
+              type: string
+              enum: [Info, Warning, Error, Critical]
+
+    Subscription:
+      type: object
+      required: [id, operatorId, eventTypes, webhookUrl, isActive, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        operatorId:
+          type: string
+        robotId:
+          type: string
+          nullable: true
+        eventTypes:
+          type: array
+          items:
+            type: string
+        webhookUrl:
+          type: string
+          format: uri
+        isActive:
+          type: boolean
+        filterCriteria:
+          type: object
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    SubscriptionUpdateRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type: string
+          format: uri
+        isActive:
+          type: boolean
+        filterCriteria:
+          type: object
+
+    ProblemDetails:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    Unauthorized:
+      description: Authentication required or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
