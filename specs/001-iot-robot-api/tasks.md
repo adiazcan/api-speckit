@@ -140,17 +140,17 @@ Per plan.md structure:
 
 ### Implementation for User Story 2
 
-- [ ] T071 [P] [US2] Create Telemetry model in src/RobotApi/Models/Telemetry.cs (Id, RobotId, Timestamp, Position object, Orientation object, Speed, BatteryLevel, Temperature, SensorReadings dictionary)
-- [ ] T072 [P] [US2] Create Position value object in src/RobotApi/Models/Position.cs (GPS and local coordinate support with Type property)
-- [ ] T073 [P] [US2] Create Orientation value object in src/RobotApi/Models/Orientation.cs (Pitch, Roll, Yaw)
-- [ ] T074 [P] [US2] Create TelemetryResponse DTO in src/RobotApi/Models/DTOs/TelemetryResponse.cs (map from Telemetry entity with computed DataFreshness)
-- [ ] T075 [US2] Implement TelemetryStore in src/RobotApi/Data/TelemetryStore.cs (ConcurrentDictionary with latest telemetry per robot and historical storage)
-- [ ] T076 [US2] Create ITelemetryService interface in src/RobotApi/Services/ITelemetryService.cs
-- [ ] T077 [US2] Implement TelemetryService in src/RobotApi/Services/TelemetryService.cs (GetCurrentTelemetryAsync with freshness logic)
-- [ ] T078 [US2] Create background telemetry generator in src/RobotApi/Services/TelemetryGeneratorService.cs (IHostedService that simulates telemetry updates every 2 seconds for online robots)
-- [ ] T079 [US2] Implement GET /v1/robots/{robotId}/telemetry endpoint in src/RobotApi/Endpoints/TelemetryEndpoints.cs (return current snapshot with freshness)
-- [ ] T080 [US2] Add telemetry-specific logging in src/RobotApi/Services/TelemetryService.cs (telemetry retrieved, stale data warnings)
-- [ ] T081 [US2] Add authorization checks in src/RobotApi/Endpoints/TelemetryEndpoints.cs (Viewer role or higher for telemetry read)
+- [X] T071 [P] [US2] Create Telemetry model in src/RobotApi/Models/Telemetry.cs (Id, RobotId, Timestamp, Position object, Orientation object, Speed, BatteryLevel, Temperature, SensorReadings dictionary)
+- [X] T072 [P] [US2] Create Position value object in src/RobotApi/Models/Position.cs (GPS and local coordinate support with Type property)
+- [X] T073 [P] [US2] Create Orientation value object in src/RobotApi/Models/Orientation.cs (Pitch, Roll, Yaw)
+- [X] T074 [P] [US2] Create TelemetryResponse DTO in src/RobotApi/Models/DTOs/TelemetryResponse.cs (map from Telemetry entity with computed DataFreshness)
+- [X] T075 [US2] Implement TelemetryStore in src/RobotApi/Data/TelemetryStore.cs (ConcurrentDictionary with latest telemetry per robot and historical storage)
+- [X] T076 [US2] Create ITelemetryService interface in src/RobotApi/Services/ITelemetryService.cs
+- [X] T077 [US2] Implement TelemetryService in src/RobotApi/Services/TelemetryService.cs (GetCurrentTelemetryAsync with freshness logic)
+- [X] T078 [US2] Create background telemetry generator in src/RobotApi/Services/TelemetryGeneratorService.cs (IHostedService that simulates telemetry updates every 2 seconds for online robots)
+- [X] T079 [US2] Implement GET /v1/robots/{robotId}/telemetry endpoint in src/RobotApi/Endpoints/TelemetryEndpoints.cs (return current snapshot with freshness)
+- [X] T080 [US2] Add telemetry-specific logging in src/RobotApi/Services/TelemetryService.cs (telemetry retrieved, stale data warnings)
+- [X] T081 [US2] Add authorization checks in src/RobotApi/Endpoints/TelemetryEndpoints.cs (Viewer role or higher for telemetry read)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

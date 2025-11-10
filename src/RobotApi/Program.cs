@@ -56,18 +56,22 @@ try
     builder.Services.AddSingleton<OperatorStore>();
     builder.Services.AddSingleton<RobotStore>();
     builder.Services.AddSingleton<CommandStore>();
+    builder.Services.AddSingleton<TelemetryStore>();
     builder.Services.AddSingleton<DataSeeder>();
 
     // Register data store interfaces
     builder.Services.AddSingleton<IDataStore<Operator>>(sp => sp.GetRequiredService<OperatorStore>());
     builder.Services.AddSingleton<IDataStore<Robot>>(sp => sp.GetRequiredService<RobotStore>());
     builder.Services.AddSingleton<IDataStore<Command>>(sp => sp.GetRequiredService<CommandStore>());
+    builder.Services.AddSingleton<IDataStore<Telemetry>>(sp => sp.GetRequiredService<TelemetryStore>());
 
     // Register services
     builder.Services.AddSingleton<ICommandService, CommandService>();
+    builder.Services.AddSingleton<ITelemetryService, TelemetryService>();
 
     // Register background services
     builder.Services.AddHostedService<CommandExecutorService>();
+    builder.Services.AddHostedService<TelemetryGeneratorService>();
 
     var app = builder.Build();
 
@@ -100,6 +104,7 @@ try
 
     // Map API endpoints
     app.MapCommandEndpoints();
+    app.MapTelemetryEndpoints();
 
     Log.Information("IoT Robot Control & Telemetry API started successfully");
 
