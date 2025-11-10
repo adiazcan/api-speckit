@@ -190,14 +190,50 @@ This project follows the [API-SpecKit Constitution](specs/memory/constitution.md
 4. Follow C# coding conventions in `.editorconfig`
 5. Update documentation as needed
 
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Client Applications                      │
+│              (Web UI, Mobile Apps, Scripts)                  │
+└────────────────────────────┬────────────────────────────────┘
+                             │ HTTPS/REST
+┌────────────────────────────┴────────────────────────────────┐
+│                    ASP.NET Core API                          │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Minimal API Endpoints                    │   │
+│  │  /commands  /telemetry  /events  /subscriptions      │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                   Middleware                          │   │
+│  │  Authentication │ Validation │ Error Handling        │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                  Business Logic                       │   │
+│  │  CommandService │ TelemetryService │ EventService    │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                Background Services                    │   │
+│  │  CommandExecutor │ TelemetryGenerator │ Webhooks     │   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │                  Data Stores                          │   │
+│  │  RobotStore │ CommandStore │ TelemetryStore          │   │
+│  │  EventStore │ SubscriptionStore                      │   │
+│  └──────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Project Status
 
 ✅ **Phase 1: Setup** - Complete  
-⏳ **Phase 2: Foundational** - In Progress  
-⏳ **Phase 3: User Story 1 (MVP)** - Pending  
-⏳ **Phase 4-6: User Stories 2-4** - Pending  
-⏳ **Phase 7: Robot Management** - Pending  
-⏳ **Phase 8: Polish** - Pending
+✅ **Phase 2: Foundational** - Complete  
+✅ **Phase 3: User Story 1 (Commands)** - Complete  
+✅ **Phase 4: User Story 2 (Real-time Telemetry)** - Complete  
+✅ **Phase 5: User Story 3 (Historical Telemetry)** - Complete  
+✅ **Phase 6: User Story 4 (Event Notifications)** - Complete  
+✅ **Phase 7: Robot Management** - Complete  
+⏳ **Phase 8: Polish & Cross-Cutting** - In Progress
 
 See [specs/001-iot-robot-api/tasks.md](specs/001-iot-robot-api/tasks.md) for detailed task breakdown.
 

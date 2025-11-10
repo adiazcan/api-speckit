@@ -97,6 +97,9 @@ try
     // Add global exception handler
     app.UseMiddleware<ExceptionHandlerMiddleware>();
 
+    // Add request logging middleware
+    app.UseMiddleware<RequestLoggingMiddleware>();
+
     // Add Serilog request logging
     app.UseSerilogRequestLogging();
 
@@ -105,6 +108,9 @@ try
 
     // Add mock authentication
     app.UseMiddleware<MockAuthenticationMiddleware>();
+
+    // Add rate limiting middleware (after authentication)
+    app.UseMiddleware<RateLimitingMiddleware>();
 
     // Configure the HTTP request pipeline
     app.MapGet("/", () => new
@@ -122,6 +128,8 @@ try
     v1.MapGroup("/subscriptions").MapSubscriptionEndpoints().WithTags("Subscriptions");
     v1.MapGroup("/events").MapEventEndpoints().WithTags("Events");
     v1.MapGroup("/robots").MapRobotEndpoints().WithTags("Robots");
+    v1.MapGroup("/health").MapHealthEndpoints().WithTags("Health");
+    v1.MapDocumentationEndpoints().WithTags("Documentation");
 
     Log.Information("IoT Robot Control & Telemetry API started successfully");
 

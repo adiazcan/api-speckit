@@ -1,0 +1,58 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Tests
+**/TestResults/
+**/*.trx
+**/*.coverage
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Documentation (included in image)
+# docs/
+
+# Specs and feature files (not needed in runtime)
+specs/
+.specify/
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# CI/CD
+.github/
+azure-pipelines.yml
+.gitlab-ci.yml
+
+# Package managers
+**/packages/
+**/.nuget/
+
+# Others
+*.md
+!README.md
+LICENSE
