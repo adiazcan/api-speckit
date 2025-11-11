@@ -67,6 +67,7 @@ try
     builder.Services.AddSingleton<TelemetryStore>();
     builder.Services.AddSingleton<EventStore>();
     builder.Services.AddSingleton<SubscriptionStore>();
+    builder.Services.AddSingleton<ClientStore>();
     builder.Services.AddSingleton<DataSeeder>();
 
     // Register data store interfaces
@@ -76,6 +77,7 @@ try
     builder.Services.AddSingleton<IDataStore<Telemetry>>(sp => sp.GetRequiredService<TelemetryStore>());
     builder.Services.AddSingleton<IDataStore<Event>>(sp => sp.GetRequiredService<EventStore>());
     builder.Services.AddSingleton<IDataStore<Subscription>>(sp => sp.GetRequiredService<SubscriptionStore>());
+    builder.Services.AddSingleton<IDataStore<Client>>(sp => sp.GetRequiredService<ClientStore>());
     
     // Register specialized store interfaces
     builder.Services.AddSingleton<IRobotStore>(sp => sp.GetRequiredService<RobotStore>());
@@ -88,6 +90,7 @@ try
     builder.Services.AddSingleton<IEventService, EventService>();
     builder.Services.AddSingleton<ISubscriptionService, SubscriptionService>();
     builder.Services.AddSingleton<IRobotService, RobotService>();
+    builder.Services.AddSingleton<IClientService, ClientService>();
     
     // Register HTTP client for webhook delivery
     builder.Services.AddHttpClient<IWebhookDeliveryService, WebhookDeliveryService>();
@@ -140,6 +143,7 @@ try
     v1.MapGroup("/subscriptions").MapSubscriptionEndpoints().WithTags("Subscriptions");
     v1.MapGroup("/events").MapEventEndpoints().WithTags("Events");
     v1.MapGroup("/robots").MapRobotEndpoints().WithTags("Robots");
+    v1.MapGroup("/clients").MapClientEndpoints().WithTags("Clients");
     v1.MapGroup("/health").MapHealthEndpoints().WithTags("Health");
     v1.MapDocumentationEndpoints().WithTags("Documentation");
 
