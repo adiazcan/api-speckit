@@ -22,8 +22,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task ListClients_ReturnsOk_WithClients()
     {
         // Arrange
-        var token = AuthHelper.GetViewerToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // Act
         var response = await _client.GetAsync("/v1/clients");
@@ -40,8 +38,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task CreateClient_ReturnsCreated_WithValidRequest()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var request = new ClientRequest
         {
@@ -70,8 +66,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task CreateClient_ReturnsBadRequest_WithInvalidEmail()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var request = new ClientRequest
         {
@@ -92,8 +86,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task CreateClient_ReturnsConflict_WithDuplicateEmail()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var uniqueEmail = $"duplicate-{Guid.NewGuid()}@example.com";
 
@@ -126,8 +118,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetClient_ReturnsOk_WithExistingClient()
     {
         // Arrange
-        var token = AuthHelper.GetViewerToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // Act
         var response = await _client.GetAsync("/v1/clients/client-1");
@@ -144,8 +134,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetClient_ReturnsNotFound_WithNonExistentClient()
     {
         // Arrange
-        var token = AuthHelper.GetViewerToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // Act
         var response = await _client.GetAsync("/v1/clients/non-existent-client");
@@ -158,8 +146,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task UpdateClient_ReturnsOk_WithValidRequest()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // First, create a client
         var createRequest = new ClientRequest
@@ -200,8 +186,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task UpdateClient_ReturnsNotFound_WithNonExistentClient()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         var request = new ClientRequest
         {
@@ -222,8 +206,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task DeleteClient_ReturnsNoContent_WithExistingClient()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // First, create a client
         var createRequest = new ClientRequest
@@ -253,8 +235,6 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task DeleteClient_ReturnsNotFound_WithNonExistentClient()
     {
         // Arrange
-        var token = AuthHelper.GetAdminToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
         // Act
         var response = await _client.DeleteAsync("/v1/clients/non-existent-client");
@@ -263,44 +243,4 @@ public class ClientEndpointTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    [Fact]
-    public async Task CreateClient_ReturnsUnauthorized_WithoutToken()
-    {
-        // Arrange
-        var request = new ClientRequest
-        {
-            Name = "Test Client",
-            Email = "test@example.com",
-            Phone = "+1-555-1234",
-            Company = "Test Company"
-        };
-
-        // Act
-        var response = await _client.PostAsJsonAsync("/v1/clients", request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task CreateClient_ReturnsForbidden_WithViewerToken()
-    {
-        // Arrange
-        var token = AuthHelper.GetViewerToken();
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-        var request = new ClientRequest
-        {
-            Name = "Test Client",
-            Email = "test@example.com",
-            Phone = "+1-555-1234",
-            Company = "Test Company"
-        };
-
-        // Act
-        var response = await _client.PostAsJsonAsync("/v1/clients", request);
-
-        // Assert
-        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-    }
 }

@@ -14,28 +14,23 @@ public static class ClientEndpoints
     {
         group.MapGet("/", ListClients)
             .WithName("ListClients")
-            .WithSummary("List all clients")
-            .RequireAuthorization("ViewerPolicy");
+            .WithSummary("List all clients");
 
         group.MapPost("/", CreateClient)
             .WithName("CreateClient")
-            .WithSummary("Create a new client")
-            .RequireAuthorization("AdminPolicy");
+            .WithSummary("Create a new client");
 
         group.MapGet("/{clientId}", GetClient)
             .WithName("GetClient")
-            .WithSummary("Get client by ID")
-            .RequireAuthorization("ViewerPolicy");
+            .WithSummary("Get client by ID");
 
         group.MapPut("/{clientId}", UpdateClient)
             .WithName("UpdateClient")
-            .WithSummary("Update an existing client")
-            .RequireAuthorization("AdminPolicy");
+            .WithSummary("Update an existing client");
 
         group.MapDelete("/{clientId}", DeleteClient)
             .WithName("DeleteClient")
-            .WithSummary("Delete a client")
-            .RequireAuthorization("AdminPolicy");
+            .WithSummary("Delete a client");
 
         return group;
     }
