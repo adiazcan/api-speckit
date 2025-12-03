@@ -41,6 +41,11 @@ public class Robot : IEntity
     public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
+    /// ID of the operator who registered this robot (for internal auditing only, not exposed in API).
+    /// </summary>
+    public string? RegisteredByOperatorId { get; set; }
+
+    /// <summary>
     /// Dictionary of supported features (commands and sensors).
     /// </summary>
     public required RobotCapabilities Capabilities { get; set; }

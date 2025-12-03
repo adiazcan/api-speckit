@@ -18,7 +18,7 @@ public sealed class RobotService : IRobotService
         _logger = logger;
     }
 
-    public async Task<Robot> RegisterRobotAsync(RobotRegistrationRequest request)
+    public async Task<Robot> RegisterRobotAsync(RobotRegistrationRequest request, string? operatorId = null)
     {
         // Check if robot with same name already exists
         var existingRobots = await _robotStore.GetAllAsync();
@@ -36,14 +36,15 @@ public sealed class RobotService : IRobotService
             ConnectionStatus = ConnectionStatus.Offline,
             Capabilities = request.Capabilities,
             RegisteredAt = DateTime.UtcNow,
+            RegisteredByOperatorId = operatorId, // Track who registered the robot (internal only)
             LastSeenAt = null
         };
 
         await _robotStore.AddAsync(robot);
 
         _logger.LogInformation(
-            "Registered new robot {RobotId} with name '{RobotName}' and model type '{ModelType}'",
-            robot.Id, robot.Name, robot.ModelType);
+            "Registered new robot {RobotId} with name '{RobotName}' and model type '{ModelType}' by operator {OperatorId}",
+            robot.Id, robot.Name, robot.ModelType, operatorId ?? "unknown");
 
         return robot;
     }

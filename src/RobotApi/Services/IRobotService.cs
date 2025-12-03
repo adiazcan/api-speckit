@@ -11,7 +11,9 @@ public interface IRobotService
     /// <summary>
     /// Registers a new robot in the system.
     /// </summary>
-    Task<Robot> RegisterRobotAsync(RobotRegistrationRequest request);
+    /// <param name="request">Robot registration details</param>
+    /// <param name="operatorId">ID of the operator registering the robot (optional)</param>
+    Task<Robot> RegisterRobotAsync(RobotRegistrationRequest request, string? operatorId = null);
 
     /// <summary>
     /// Gets a robot by ID.

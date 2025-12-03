@@ -38,6 +38,17 @@ try
     // Add FluentValidation
     builder.Services.AddFluentValidators();
 
+    // Add Authorization with role-based policies
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("ViewerPolicy", policy =>
+            policy.RequireRole("Viewer", "Operator", "Administrator"));
+        options.AddPolicy("OperatorPolicy", policy =>
+            policy.RequireRole("Operator", "Administrator"));
+        options.AddPolicy("AdminPolicy", policy =>
+            policy.RequireRole("Administrator"));
+    });
+
     // Add CORS
     var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? new[] { "*" };
     builder.Services.AddCors(options =>
@@ -120,6 +131,9 @@ try
 
     // Add mock authentication
     app.UseMiddleware<MockAuthenticationMiddleware>();
+
+    // Add authorization (after authentication)
+    app.UseAuthorization();
 
     // Add rate limiting middleware (after authentication)
     app.UseMiddleware<RateLimitingMiddleware>();
