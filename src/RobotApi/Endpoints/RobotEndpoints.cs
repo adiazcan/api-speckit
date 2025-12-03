@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using RobotApi.Extensions;
 using RobotApi.Models.Dtos;
 using RobotApi.Services;
 
@@ -44,6 +45,7 @@ public static class RobotEndpoints
 
     private static async Task<IResult> RegisterRobot(
         [FromBody] RobotRegistrationRequest request,
+        HttpContext context,
         IRobotService robotService,
         IValidator<RobotRegistrationRequest> validator)
     {
@@ -56,7 +58,8 @@ public static class RobotEndpoints
 
         try
         {
-            var robot = await robotService.RegisterRobotAsync(request);
+            var operatorId = context.User.GetOperatorId();
+            var robot = await robotService.RegisterRobotAsync(request, operatorId);
             var response = RobotResponse.FromRobot(robot);
             return Results.Created($"/v1/robots/{robot.Id}", response);
         }
